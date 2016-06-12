@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="main">
+    <typeAlias alias="noticeDTO" type="com.bnc.community.model.NoticeDTO"/>
+    <typeAlias alias="carDTO" type="com.bnc.rentcar.model.CarInformationDTO"/>
+    <typeAlias alias="travelDTO" type="com.bnc.travel.model.TravelDTO"/>
+    
+    <select id="bestcar" parameterClass="int" resultClass="carDTO">
+        SELECT *
+        FROM TBL_CAR
+        WHERE CAR_SEQ = #seq#
+    </select>
+    
+    <select id="besttravel" parameterClass="int" resultClass="travelDTO">
+        SELECT *
+        FROM TBL_TOUR
+        WHERE TOUR_SEQ = #seq#
+    </select>
+    
+    <select id="noticelist" parameterClass="java.util.Map" resultClass="noticeDTO">
+        SELECT A.*
+        FROM
+        (
+            SELECT *
+            FROM TBL_BOARD
+            WHERE BTYPE = 5
+            ORDER BY SEQ DESC
+        ) A
+        WHERE ROWNUM &lt; 5
+    </select>
+    
+    <select id="carlist" parameterClass="java.util.Map" resultClass="carDTO">
+        SELECT A.*
+        FROM
+        (
+            SELECT *
+            FROM TBL_CAR
+            ORDER BY CAR_SEQ DESC
+        ) A
+        WHERE ROWNUM &lt; 13
+    </select>
+    
+    <select id="travellist" parameterClass="java.util.Map" resultClass="travelDTO">
+        SELECT A.*
+        FROM
+        (
+            SELECT *
+            FROM TBL_TOUR
+            ORDER BY TOUR_SEQ DESC
+        ) A
+        WHERE ROWNUM &lt; 13
+    </select>
+    
+</sqlMap>
