@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="remote">
+    <typeAlias alias="insuranceDTO" type="com.bnc.reserve.model.InsuranceDTO"/>
+    <typeAlias alias="rentDTO" type="com.bnc.rentcar.model.CarInformationDTO"/>
+    <typeAlias alias="trentDTO" type="com.bnc.travel.model.TRentDTO"/>
+    
+    <select id="getCarList" parameterClass="java.util.Map" resultClass="rentDTO">
+        SELECT * FROM TBL_CAR
+        ORDER BY CAR_SEQ DESC
+    </select>
+    
+</sqlMap>

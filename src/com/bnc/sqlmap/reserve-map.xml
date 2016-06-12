@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="reserve">
+    <typeAlias alias="insuranceDTO" type="com.bnc.reserve.model.InsuranceDTO"/>
+    <typeAlias alias="rentDTO" type="com.bnc.rentcar.model.CarInformationDTO"/>
+    <typeAlias alias="trentDTO" type="com.bnc.travel.model.TRentDTO"/>
+    
+    <select id="getInsuranceList" resultClass="insuranceDTO">
+        SELECT * FROM TBL_INSURANCE ORDER BY INSURANCE_SEQ ASC
+    </select>
+    
+    <select id="getTotalCarCount" parameterClass="Integer" resultClass="Integer">
+        SELECT COUNT(*) FROM TBL_CAR
+        WHERE CAR_ROFFICE = #roffice#
+    </select>
+    
+    <select id="getRentCarList" parameterClass="java.util.Map" resultClass="rentDTO">
+        SELECT B.* 
+        FROM 
+        ( 
+            SELECT ROWNUM RN, A.* 
+            FROM 
+            ( 
+                SELECT * 
+                FROM TBL_CAR 
+        <dynamic prepend="WHERE">
+            <isNotNull prepend="AND" property="roffice">
+                CAR_ROFFICE = #roffice#
+            </isNotNull>
+            <isNotNull prepend="AND" property="carGrade">
+                CAR_GRADE = #carGrade#
+            </isNotNull>
+        </dynamic>
+                AND CAR_RENTCHECK = '0' 
+                ORDER BY CAR_SEQ DESC
+            ) A 
+            WHERE ROWNUM &lt;= #end#
+        ) B 
+        WHERE B.RN &gt; #start#
+    </select>
+    
+    <select id="getTotalRentCount" resultClass="Integer">
+        SELECT COUNT(*) FROM TBL_RENT
+    </select>
+    
+    <select id="getRentSeq" resultClass="Integer">
+        SELECT MAX(RENT_SEQ) FROM TBL_RENT
+    </select>
+    
+    <update id="insertTour" parameterClass="trentDTO">
+        INSERT INTO TBL_TRENT 
+        ( 
+            TRENT_SEQ, 
+            TRENT_MEMBER_ID, 
+            TRENT_TOUR_SEQ, 
+            TRENT_RENT_SEQ, 
+            TRENT_CAR_SEQ, 
+            TRENT_CHECKINDAY, 
+            TRENT_CHECKOUTDAY, 
+            TRENT_SUMPEOPLE, 
+            TRENT_TOTALPRICE, 
+            TRENT_NOTE
+        )
+        VALUES 
+        ( 
+            TBL_TRENT_SEQ.NEXTVAL, 
+            #trent_member_id#, 
+            #trent_tour_seq#, 
+            #trent_rent_seq#, 
+            #trent_car_seq#, 
+            #trent_checkinday#, 
+            #trent_checkoutday#, 
+            #trent_sumpeople#, 
+            #trent_totalprice#, 
+            #trent_note#
+        )
+    </update>
+    
+</sqlMap>
